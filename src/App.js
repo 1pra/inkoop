@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
 
-function App() {
+const App = () => {
+  const[data, setData]= useState("");
+  const[count,setCount]=useState(0);
+  const[repeated, setRepeated]=useState([]);
+  const[unique, setUnique]=useState([]);
+
+  useEffect(() => {
+    const words = data.split(" ");
+    setCount(words.length-1);
+    const wordMap = {};
+    words.forEach((word) => {
+      if (wordMap[word]) {
+        wordMap[word] += 1;
+      } else {
+        wordMap[word] = 1;
+      }
+    });
+    setUnique(Object.keys(wordMap));
+    setRepeated(
+      Object.keys(wordMap)
+        .sort((a, b) => wordMap[b] - wordMap[a])
+        .filter((word) => wordMap[word] > 1)
+    );
+  },[data]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      
+        <textarea onChange={(e)=>setData(e.target.value)}/>
+        
+        <p>number of words:{count}</p>
+        <p>Unique Words: {unique.join(", ")}</p>
+        <p>Repeated Words : {repeated.join(", ")}</p>
+
     </div>
-  );
+    
+  )
 }
 
-export default App;
+export default App
+
